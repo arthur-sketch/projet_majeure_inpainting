@@ -7,3 +7,6 @@ https://hal.archives-ouvertes.fr/tel-01075261/file/These-Mahmoud-Ghoniem-2010.pd
 
 lien expliquant qu'il y a 2 méthodes d'inpainting utilisable sur cv2 : 
 https://fr.acervolima.com/image-inpainting-avec-opencv/
+
+travail sur l'inpainting :
+https://math.unice.fr/~auroux/Work/HDR/html_fr/node8.html
