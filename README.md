@@ -2,7 +2,7 @@
 
 
 
-lien thèse sur l'inpainting (à partir de la page 40) : 
+lien thèse sur l'inpainting (à partir de la page 56 du pdf) : 
 https://hal.archives-ouvertes.fr/tel-01075261/file/These-Mahmoud-Ghoniem-2010.pdf
 
 lien expliquant qu'il y a 2 méthodes d'inpainting utilisable sur cv2 : 
