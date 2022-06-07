@@ -47,9 +47,6 @@ img_copy = deepcopy(img)
 
 
 
-#Faire gaffe ici : cv2 dessine bien selon les axes x et y classiques, mais dans le parcours de la boucle, les axes 
-#sont inversés (voir l'implémentation lignes 79/80) comme pour les grads
-
 #creation omega
 # Omega = cv2.rectangle(img, startPointOmega, endPointOmega, color=(255,0,0), thickness=5)
 
@@ -77,22 +74,23 @@ beta = np.zeros( (lignes, colonnes) )
 
 
 #fonction utile
+
 def getNormNabla(beta,i,j):
     
     if beta[i,j] > 0:
 
-        val = sqrt( min( img_copy[i,j] - img_copy[i,j-1], 0 )**2  +  max( img_copy[i,j] - img_copy[i,j+1], 0 )**2      +     min( img_copy[i,j] - img_copy[i-1,j], 0 )**2  +  max( img_copy[i,j] - img_copy[i+1,j], 0 )**2 )
+        val = sqrt(    min(  float(img_copy[i,j]) - float(img_copy[i,j-1]), 0 )**2  +  max(  float(img_copy[i,j]) - float(img_copy[i,j+1]), 0 )**2      +     min(  float(img_copy[i,j])  - float(img_copy[i-1,j]), 0 )**2  +  max( float(img_copy[i,j]) - float(img_copy[i+1,j]), 0 )**2   )
 
     else:
 
-        val = sqrt( max( img_copy[i,j] - img_copy[i,j-1], 0 )**2  +  min( img_copy[i,j] - img_copy[i,j+1], 0 )**2      +     max( img_copy[i,j] - img_copy[i-1,j], 0 )**2  +  min( img_copy[i,j] - img_copy[i+1,j], 0 )**2 )
+        val = sqrt(    max(  float(img_copy[i,j]) - float(img_copy[i,j-1]), 0 )**2  +  min(  float(img_copy[i,j]) - float(img_copy[i,j+1]), 0 )**2      +     max(  float(img_copy[i,j])  - float(img_copy[i-1,j]), 0 )**2  +  min( float(img_copy[i,j]) - float(img_copy[i+1,j]), 0 )**2   )
 
-
+    
     return val
 
 
 
-
+cv2.ip
 
 #paramètres algo
 
@@ -145,7 +143,7 @@ while(count < N):
 
 t2 = time.time()
 print('\n... End processing ...')
-print('\nProcess time : ' + str(t2-t1) + ' s\n')
+print('\nProcess time : ' +str(round((t2-t1),3)) + ' s\n')
 
 
 
@@ -156,7 +154,7 @@ print('\nProcess time : ' + str(t2-t1) + ' s\n')
 print('... Affichage resultats ...')
 plt.figure()
 plt.subplot(1,2,1)
-plt.title('Image non retouchée')
+plt.title('Image initiale')
 plt.axis('off')
 plt.imshow(img, 'gray')
 plt.subplot(1,2,2)

@@ -1,22 +1,19 @@
-from turtle import shape
 import numpy as np
+import cv2
+
+
+img  = cv2.imread("../images/gris.jpg")
 
 
 
+for i in range(175,225):
+    for j in range(175,225):
 
-dL = [ [ [0,0] for j in range(2) ] for i in range(3) ]
-dL = np.array(dL)
-print(dL)
-
-dL[1,1] = [2,2]
-
-print("new : " ,dL)
+        img[i,j] = 0
 
 
+cv2.imwrite("greyAndWhite.jpg", img)
 
-# [ [[0 0][0 0][0 0]]
-#   [[0 0][0 0][0 0]]
-#   [[0 0][0 0][0 0]] ]
 
 
 
