@@ -1,6 +1,5 @@
 import math
 from colorama import Fore
-from yaml import load
 
 
 
