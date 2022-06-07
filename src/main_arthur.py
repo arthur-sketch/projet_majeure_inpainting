@@ -2,7 +2,7 @@
 #main.py
 
 #imports
-from pickletools import uint8
+
 import cv2
 from matplotlib import pyplot as plt
 from math import *
@@ -73,11 +73,14 @@ def getNormNabla(I,beta,i,j):
     
     if beta > 0:
 
-        val = np.sqrt( min( round( float(I[i,j]), 8) - round( float(I[i,j-1]), 8), 0 )**2  +  max( round( float(I[i,j]), 8) - round( float(I[i,j+1]), 8), 0 )**2      +     min( round( float(I[i,j]), 8) - round( float(I[i-1,j]), 8), 0 )**2  +  max( round( float(I[i,j]), 8) - round( float(I[i+1,j]), 8), 0 )**2 )
+        val = np.sqrt(    min( float(I[i,j])-  float(I[i,j-1]) , 0 )**2  +  max( float(I[i,j]) -  float(I[i,j+1]), 0 )**2      +     min( float(I[i,j]) -  float(I[i-1,j]) , 0 )**2  +  max( float(I[i,j]) - float(I[i+1,j]), 0 )**2     )
 
     else:
 
-        val = np.sqrt( max( round( float(I[i,j]), 8) - round( float(I[i,j-1]), 8), 0 )**2  +  min( round( float(I[i,j]), 8) - round( float(I[i,j+1]), 8), 0 )**2      +     max( round( float(I[i,j]), 8) - round( float(I[i-1,j]), 8), 0 )**2  +  min( round( float(I[i,j]), 8) - round( float(I[i+1,j]), 8), 0 )**2 )
+        val = np.sqrt(    max( float(I[i,j])-  float(I[i,j-1]) , 0 )**2  +  min( float(I[i,j]) -  float(I[i,j+1]), 0 )**2      +     max( float(I[i,j]) -  float(I[i-1,j]) , 0 )**2  +  min( float(I[i,j]) - float(I[i+1,j]), 0 )**2     )  
+
+
+        # val = np.sqrt( max( round( float(I[i,j]), 8) - round( float(I[i,j-1]), 8), 0 )**2  +  min( round( float(I[i,j]), 8) - round( float(I[i,j+1]), 8), 0 )**2      +     max( round( float(I[i,j]), 8) - round( float(I[i-1,j]), 8), 0 )**2  +  min( round( float(I[i,j]), 8) - round( float(I[i+1,j]), 8), 0 )**2 )
 
 
 
@@ -100,11 +103,11 @@ affichage = False
 
 
 print('... Processing ...') 
-#loadingProgress(count,N)
-
 t1 = time.time()
 
-#pour mettre un flou
+loadingProgress(count,N)
+
+
 
 while(count < N):
 
@@ -128,6 +131,7 @@ while(count < N):
             
             beta = np.dot(dL[:,i,j],vecN_normed[:,i,j])
             norm_nabla = getNormNabla(new_img2, beta, i, j)
+            print(norm_nabla)
             It = beta * norm_nabla
             new_img[i,j] = new_img[i,j] + dT * It
 
@@ -147,7 +151,6 @@ while(count < N):
 
 
     new_img2 = deepcopy(new_img)
-    #print(type(new_img2))
 
     count+=1
     # print(count)
@@ -157,7 +160,6 @@ while(count < N):
         # loadingProgress(N,N)
         # break
 
-loadingProgress(N,N)
 
 new_img = (new_img*255.0).astype(np.uint8)
 
