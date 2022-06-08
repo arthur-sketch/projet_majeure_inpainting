@@ -17,7 +17,7 @@ print('... Intialisation ...')
 
 
 #init image
-img_name = "landscape.jpg"
+img_name = "grayAndBlack.jpg"
 img = cv2.imread("../images/" + img_name, 0)
 
 img = img.astype(float)/255.0
@@ -33,10 +33,10 @@ omegaWidth = 50
 startPointOmega = (omegaX, omegaY)
 endPointOmega = (omegaX + omegaWidth, omegaY + omegaHeight)
 
-for j in range(omegaX, omegaX+ omegaWidth):
-    for i in range(omegaY, omegaY + omegaHeight):
+# for j in range(omegaX, omegaX+ omegaWidth):
+#     for i in range(omegaY, omegaY + omegaHeight):
 
-        img[i,j] = 0
+#         img[i,j] = 0
 
 
 
@@ -70,6 +70,7 @@ epsilon = 0.00001 #pour ne pas diviser par 0 dans la norme
 
 #fonction utile
 def getNormNabla(I,beta,i,j):
+
     
     if beta > 0:
 
@@ -92,10 +93,10 @@ def laplac(I,i,j) :
 
 
 #paramètres algo
-N = 600 # condition d'arret temporaire, nombre d'itération
+N = 1000 # condition d'arret temporaire, nombre d'itération
 count = 0 # nb d'itération dynamique
-dT = 0.1 # ce qu'ils ont mit dans le programme // ok pxl
-It = 100 #init pour la condition d'arret
+dT = 0.01 # ce qu'ils ont mit dans le programme // ok pxl
+It = 0 #init pour la condition d'arret
 affichage = False
 
 
@@ -111,57 +112,61 @@ loadingProgress(count,N)
 
 while(count < N):
 
-    # try:
+    try:
 
 
-    grad_Ny, grad_Nx = np.gradient(new_img2) # définition des gradients
-    norm = ( grad_Ny**2 + grad_Nx**2 )**(1/2) # norme du gradient
-    
-    for j in range(omegaX, omegaX + omegaWidth):
+        grad_Ny, grad_Nx = np.gradient(new_img2) # définition des gradients
+        norm = ( grad_Ny**2 + grad_Nx**2 )**(1/2) # norme du gradient
         
-        for i in range(omegaY , omegaY + omegaHeight ):
-        
-
-
-            #on utilise la formule du laplacien discret 
-            dL[:,i,j] = np.array( [ laplac(new_img2, i+1, j) - laplac(new_img2, i-1, j) , laplac(new_img2, i, j+1) - laplac(new_img2, i, j-1) ] )
-
-            vecN_normed[:,i,j] = np.array([-grad_Ny[i,j],grad_Nx[i,j]])/ ( norm[i,j] + epsilon )
+        for j in range(omegaX, omegaX + omegaWidth):
             
+            for i in range(omegaY , omegaY + omegaHeight ):
             
-            beta = np.dot(dL[:,i,j],vecN_normed[:,i,j])
-            norm_nabla = getNormNabla(new_img2, beta, i, j)
-            print(norm_nabla)
-            It = beta * norm_nabla
-            new_img[i,j] = new_img[i,j] + dT * It
+
+
+                #on utilise la formule du laplacien discret 
+                dL[:,i,j] = np.array( [ laplac(new_img2, i+1, j) - laplac(new_img2, i-1, j) , laplac(new_img2, i, j+1) - laplac(new_img2, i, j-1) ] )
+
+                # print("dl : ",dL[:,i,j])
+                vecN_normed[:,i,j] = np.array([-grad_Ny[i,j],grad_Nx[i,j]])/ ( norm[i,j] + epsilon )
+                # print("vecN : ",vecN_normed[:,i,j])
+                
+                beta = np.dot(dL[:,i,j],vecN_normed[:,i,j])
+                norm_nabla = getNormNabla(new_img2, beta, i, j)
+                # print(norm_nabla)
+                It = beta * norm_nabla
+                # print("beta : ", beta)
+                new_img[i,j] = new_img[i,j] + dT * It
 
 
 
-            if affichage:
+                if affichage:
 
-                print("\n\n(i,j) : ", i,j )
-                print("dL : ",dL[:,i,j] )
-                print("vecN : ", vecN_normed[:,i,j])
-                print("beta : ",beta)
-                print("normNab : ",norm_nabla) 
-                print("It : ", It)
-                print("AVANT : ",new_img2[i,j])
-                print("APRES : ",new_img[i,j])
-
-
-
-    new_img2 = deepcopy(new_img)
-
-    count+=1
-    # print(count)
-    loadingProgress(count, N)
-
-    # except:
-        # loadingProgress(N,N)
-        # break
+                    print("\n\n(i,j) : ", i,j )
+                    print("dL : ",dL[:,i,j] )
+                    print("vecN : ", vecN_normed[:,i,j])
+                    print("beta : ",beta)
+                    print("normNab : ",norm_nabla) 
+                    print("It : ", It)
+                    print("AVANT : ",new_img2[i,j])
+                    print("APRES : ",new_img[i,j])
 
 
-new_img = (new_img*255.0).astype(np.uint8)
+
+        new_img2 = deepcopy(new_img)
+
+
+        count+=1
+        # print(count)
+        loadingProgress(count, N)
+
+    except:
+
+        loadingProgress(N,N)
+        break
+
+
+# new_img = (new_img*255.0).astype(np.uint8)
 
 
 t2 = time.time()
@@ -179,5 +184,4 @@ plt.imshow(img, 'gray')
 plt.subplot(1,2,2)
 plt.title('Image retouchée')
 plt.imshow(new_img, 'gray')
-#plt.quiver(vecN_normed[0,:,:],-vecN_normed[1,:,:],color='r',units='xy',scale=10)
 plt.show()
