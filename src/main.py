@@ -16,17 +16,17 @@ from LoadingProgress import loadingProgress
 print('... Intialisation ...')
 
 
-img_name = "landscape.jpg"
-img = cv2.imread("../images/" + img_name, 0)
+# img_name = "landscape.jpg"
+# img = cv2.imread("../images/" + img_name, 0)
 
 
 
-# img = 128*np.ones(shape=(200,200))
+img = 128*np.ones(shape=(200,200))
 
-# for i in range(95,105):
-#     for j in range(95,105):
+for i in range(95,105):
+    for j in range(95,105):
 
-#         img[i,j] = 0
+        img[i,j] = 0
 
 
 img = img.astype(float)/255.0
@@ -35,18 +35,18 @@ lignes, colonnes = img.shape
 
 
 #paramètres zones a inpait : (omegaY / Height ,omegaX / Width) 
-omegaX = 760
-omegaY = 2135
-omegaHeight = 150
-omegaWidth = 30
+omegaX = 95
+omegaY = 95
+omegaHeight = 10
+omegaWidth = 10
 startPointOmega = (omegaX, omegaY)
 endPointOmega = (omegaX + omegaWidth, omegaY + omegaHeight)
 
 
-for i in range(omegaY,omegaY + omegaHeight):
-    for j in range(omegaX, omegaX + omegaWidth):
+# for i in range(omegaY,omegaY + omegaHeight):
+#     for j in range(omegaX, omegaX + omegaWidth):
 
-        img[i,j] = 0
+#         img[i,j] = 0
 
 
 new_img = deepcopy(img) # nouvelle image pour pouvoir comparer les 2
@@ -100,9 +100,9 @@ def laplac(I,i,j) :
 
 
 #paramètres algo
-N = 1000 # condition d'arret temporaire, nombre d'itération
+N = 8000 # condition d'arret temporaire, nombre d'itération
 count = 0 # nb d'itération dynamique
-dT = 0.4 # ce qu'ils ont mit dans le programme // ok pxl
+dT = 0.5 # ce qu'ils ont mit dans le programme // ok pxl
 It = 0 #init pour la condition d'arret
 affichage = False
 
@@ -179,7 +179,7 @@ img = (img*255.0).astype(np.uint8)
 # Omega = cv2.rectangle(img, startPointOmega, endPointOmega, color=(255,0,0), thickness=5)
 
 
-cv2.imwrite("../images/result.jpg", new_img)
+cv2.imwrite("result_g_N=8k_dT=05.jpg", new_img)
 
 
 t2 = time.time()
