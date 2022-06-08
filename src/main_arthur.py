@@ -17,8 +17,17 @@ print('... Intialisation ...')
 
 
 #init image
-img_name = "grayAndBlack.jpg"
-img = cv2.imread("../images/" + img_name, 0)
+# img_name = "g.jpg"
+# img = cv2.imread("../images/" + img_name, 0)
+
+
+img = 128*np.ones(shape=(200,200))
+
+for i in range(95,105):
+    for j in range(95,105):
+
+        img[i,j] = 0
+
 
 img = img.astype(float)/255.0
 
@@ -26,17 +35,12 @@ lignes, colonnes = img.shape
 
 
 #paramètres zones a inpait : (omegaY / Height ,omegaX / Width) 
-omegaX = 175
-omegaY = 175
-omegaHeight = 50
-omegaWidth = 50
+omegaX = 95
+omegaY = 95
+omegaHeight = 10
+omegaWidth = 10
 startPointOmega = (omegaX, omegaY)
 endPointOmega = (omegaX + omegaWidth, omegaY + omegaHeight)
-
-# for j in range(omegaX, omegaX+ omegaWidth):
-#     for i in range(omegaY, omegaY + omegaHeight):
-
-#         img[i,j] = 0
 
 
 
@@ -74,11 +78,11 @@ def getNormNabla(I,beta,i,j):
     
     if beta > 0:
 
-        val = np.sqrt(    min( float(I[i,j])-  float(I[i,j-1]) , 0 )**2  +  max( float(I[i,j]) -  float(I[i,j+1]), 0 )**2      +     min( float(I[i,j]) -  float(I[i-1,j]) , 0 )**2  +  max( float(I[i,j]) - float(I[i+1,j]), 0 )**2     )
+        val = np.sqrt(    min( float(I[i,j]) - float(I[i,j-1]) , 0 )**2  +  max( float(I[i,j+1]) - float(I[i,j])   , 0 )**2      +     min( float(I[i,j]) -  float(I[i-1,j]) , 0 )**2  +  max( float(I[i+1,j]) - float(I[i,j]) , 0 )**2     )
 
     else:
 
-        val = np.sqrt(    max( float(I[i,j])-  float(I[i,j-1]) , 0 )**2  +  min( float(I[i,j]) -  float(I[i,j+1]), 0 )**2      +     max( float(I[i,j]) -  float(I[i-1,j]) , 0 )**2  +  min( float(I[i,j]) - float(I[i+1,j]), 0 )**2     )  
+        val = np.sqrt(    max( float(I[i,j]) - float(I[i,j-1]) , 0 )**2  +  min( float(I[i,j+1]) - float(I[i,j]) , 0 )**2      +     max( float(I[i,j]) -  float(I[i-1,j]) , 0 )**2  +  min( float(I[i+1,j]) - float(I[i,j]) , 0 )**2     )  
 
 
         # val = np.sqrt( max( round( float(I[i,j]), 8) - round( float(I[i,j-1]), 8), 0 )**2  +  min( round( float(I[i,j]), 8) - round( float(I[i,j+1]), 8), 0 )**2      +     max( round( float(I[i,j]), 8) - round( float(I[i-1,j]), 8), 0 )**2  +  min( round( float(I[i,j]), 8) - round( float(I[i+1,j]), 8), 0 )**2 )
@@ -93,9 +97,9 @@ def laplac(I,i,j) :
 
 
 #paramètres algo
-N = 1000 # condition d'arret temporaire, nombre d'itération
+N = 13000 # condition d'arret temporaire, nombre d'itération
 count = 0 # nb d'itération dynamique
-dT = 0.01 # ce qu'ils ont mit dans le programme // ok pxl
+dT = 0.5 # ce qu'ils ont mit dans le programme // ok pxl
 It = 0 #init pour la condition d'arret
 affichage = False
 
@@ -166,7 +170,10 @@ while(count < N):
         break
 
 
-# new_img = (new_img*255.0).astype(np.uint8)
+new_img = (new_img*255.0).astype(np.uint8)
+img = (img*255.0).astype(np.uint8)
+
+cv2.imwrite("../images/result.jpg", new_img)
 
 
 t2 = time.time()
@@ -175,13 +182,13 @@ print('\nProcess time : ' + str(round(t2-t1,3)) + ' s\n')
 
 
 #affichage
-print('... Affichage resultats ...')
-plt.figure()
-plt.subplot(1,2,1)
-plt.title('Image non retouchée')
-plt.axis('off')
-plt.imshow(img, 'gray')
-plt.subplot(1,2,2)
-plt.title('Image retouchée')
-plt.imshow(new_img, 'gray')
-plt.show()
+# print('... Affichage resultats ...')
+# plt.figure()
+# plt.subplot(1,2,1)
+# plt.title('Image non retouchée')
+# plt.axis('off')
+# plt.imshow(img, 'gray')
+# plt.subplot(1,2,2)
+# plt.title('Image retouchée')
+# plt.imshow(new_img, 'gray')
+# plt.show()
